@@ -798,39 +798,39 @@ def main(**kwargs):
 
     if kwargs['timespec']:
         curses.wrapper(countdown, **kwargs)
+    # else:
+    seconds_elapsed, laps = curses.wrapper(stopwatch, **kwargs)
+
+    for lap_index, lap_time in enumerate(laps):
+        stderr.write("{:.3f}\t{}\tlap {}\n".format(
+            lap_time,
+            format_seconds(int(lap_time)),
+            lap_index + 1,
+        ))
+
+    if laps:
+        stderr.write("{:.3f}\t{}\tlap {}\n".format(
+            seconds_elapsed,
+            format_seconds(int(seconds_elapsed)),
+            len(laps) + 1,
+        ))
+        laps.append(seconds_elapsed)
+        total_seconds = sum(laps)
+        average_seconds = total_seconds / len(laps)
+        stderr.write("{:.3f}\t{}\tlap avg\n".format(
+            average_seconds,
+            format_seconds(int(average_seconds)),
+        ))
+        stderr.write("{:.3f}\t{}\ttotal\n".format(
+            total_seconds,
+            format_seconds(int(total_seconds)),
+        ))
     else:
-        seconds_elapsed, laps = curses.wrapper(stopwatch, **kwargs)
-
-        for lap_index, lap_time in enumerate(laps):
-            stderr.write("{:.3f}\t{}\tlap {}\n".format(
-                lap_time,
-                format_seconds(int(lap_time)),
-                lap_index + 1,
-            ))
-
-        if laps:
-            stderr.write("{:.3f}\t{}\tlap {}\n".format(
-                seconds_elapsed,
-                format_seconds(int(seconds_elapsed)),
-                len(laps) + 1,
-            ))
-            laps.append(seconds_elapsed)
-            total_seconds = sum(laps)
-            average_seconds = total_seconds / len(laps)
-            stderr.write("{:.3f}\t{}\tlap avg\n".format(
-                average_seconds,
-                format_seconds(int(average_seconds)),
-            ))
-            stderr.write("{:.3f}\t{}\ttotal\n".format(
-                total_seconds,
-                format_seconds(int(total_seconds)),
-            ))
-        else:
-            stderr.write("{:.3f}\t{}\ttotal\n".format(
-                seconds_elapsed,
-                format_seconds(int(seconds_elapsed)),
-            ))
-        stderr.flush()
+        stderr.write("{:.3f}\t{}\ttotal\n".format(
+            seconds_elapsed,
+            format_seconds(int(seconds_elapsed)),
+        ))
+    # stderr.flush()
 
 
 if __name__ == '__main__':
